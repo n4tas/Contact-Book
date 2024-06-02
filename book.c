@@ -2,7 +2,7 @@
 static node_t *top = NULL;
 char filepath[256];
 const char *user;
-char *choices[] = {
+const char *choices[] = {
     "1. Add contact",
     "2. Remove contact",
     "3. Insert contact",
@@ -14,6 +14,11 @@ char *choices[] = {
     "9. Print contact(s)",
     "10. Exit"};
 int n_choices = sizeof(choices) / sizeof(char *);
+#define choices() for (int i = 0; i < n_choices; i++){ \
+        printf("%s\n", choices[i]); \
+    } \
+    printf("Press index of the function: "); \
+    scanf("%d", &c);
 int Lock()
 {
     int fd = open(PATH, O_RDWR | O_CREAT, 0666);
@@ -247,22 +252,21 @@ void loadContacts()
 }
 void printList()
 {
-    if (&top == NULL)
+    if (top == NULL)
         return;
     node_t *temp = top;
     uint16_t i = 0;
     while (temp != NULL)
     {
-        move(i, 0);
         struct Contact *contact = ((struct Contact *)temp->data);
         if (contact->email != NULL && strcmp(contact->email, "null") != 0)
-            printw("Name: %s, Surname: %s, Phone: %s, Email: %s\n",
+            printf("Name: %s, Surname: %s, Phone: %s, Email: %s\n",
                    contact->first_name,
                    contact->last_name,
                    contact->phone_number,
                    contact->email);
         if (contact->email == NULL || strcmp(contact->email, "null") == 0)
-            printw("Name: %s, Surname: %s, Phone: %s\n",
+            printf("Name: %s, Surname: %s, Phone: %s\n",
                    contact->first_name,
                    contact->last_name,
                    contact->phone_number);
@@ -277,46 +281,18 @@ void printObj(node_t *data)
     node_t *temp = data;
     struct Contact *contact = ((struct Contact *)temp->data);
     if (contact->email != NULL && strcmp(contact->email, "null") != 0)
-        printw("Name: %s, Surname: %s, Phone: %s, Email: %s\n",
+        printf("Name: %s, Surname: %s, Phone: %s, Email: %s\n",
                contact->first_name,
                contact->last_name,
                contact->phone_number,
                contact->email);
 
     if (contact->email == NULL || strcmp(contact->email, "null") == 0)
-        printw("Name: %s, Surname: %s, Phone: %s\n",
+        printf("Name: %s, Surname: %s, Phone: %s\n",
                contact->first_name,
                contact->last_name,
                contact->phone_number);
     temp = temp->next;
-}
-void print_menu(WINDOW *menu_win, int highlight)
-{
-    int x, y, i;
-    x = 2;
-    y = 1;
-    box(menu_win, 0, 0);
-    for (i = 0; i < n_choices; ++i)
-    {
-        if (highlight == i + 1)
-        {
-            wattron(menu_win, A_REVERSE);
-            mvwprintw(menu_win, y, x, "%s", choices[i]);
-            wattroff(menu_win, A_REVERSE);
-        }
-        else
-        {
-            mvwprintw(menu_win, y, x, "%s", choices[i]);
-        }
-        ++y;
-    }
-    wrefresh(menu_win);
-}
-void del_menu(WINDOW *menu_win)
-{
-    move(0, 0);
-    clear();
-    refresh();
 }
 int main()
 {
@@ -325,392 +301,158 @@ int main()
     signal(SIGCONT, handle_signal);
     signal(SIGSEGV, handle_signal);
     signal(SIGTERM, handle_signal);
-    user = getlogin();
-    if (user == NULL)
-        return 1;
-    snprintf(filepath, sizeof(filepath), "/home/%s/Public/Books.csv", user);
+    int c;
+    unsigned p;
     char first_name[30];
     char last_name[30];
     char phone_number[30];
     char email[30];
-    initscr();
-    cbreak();
-    noecho();
-    keypad(stdscr, TRUE);
-    int startx, starty;
-    int highlight = 1;
-    int choice = 0;
-    int c;
-    startx = (COLS - WIDTH) / 2;
-    starty = (LINES - HEIGHT) / 2;
-    // center
-    int row;
-    int col;
-    WINDOW *menu_win;
-    menu_win = newwin(HEIGHT, WIDTH, starty, startx);
-    keypad(menu_win, TRUE);
-    refresh();
-    curs_set(0);
-    print_menu(menu_win, highlight);
-    while (1)
-    {
-        c = wgetch(menu_win);
-        switch (c)
-        {
-        case KEY_UP:
-            if (highlight == 1)
-                highlight = n_choices;
-            else
-                --highlight;
-            break;
-        case KEY_DOWN:
-            if (highlight == n_choices)
-                highlight = 1;
-            else
-                ++highlight;
-            break;
-        case 10:
-            choice = highlight;
-            break;
-        default:
-            break;
-        }
-        print_menu(menu_win, highlight);
-        if (choice == 1)
-        {
-            del_menu(menu_win);
-            printw("Enter contact's first name: ");
-            refresh();
-            echo();
-            scanw("%s", first_name);
-            printw("Enter contact's last name: ");
-            refresh();
-            scanw("%s", last_name);
-            printw("Enter contact's phone number: ");
-            refresh();
-            scanw("%s", phone_number);
-            printw("Enter contact's email: ");
-            refresh();
-            scanw("%s", email);
-            if (email[0] == '\n' || email == "null" || email[0] == '\0')
+    user = getlogin();
+    if (user == NULL)
+        return 1;
+    snprintf(filepath, sizeof(filepath), "/home/%s/Public/Books.csv", user);
+    system("clear");
+    while (1){
+    system("clear");
+    choices();
+    switch (c){
+        case 1:
+            system("clear");
+            printf("Enter contact's first name: ");
+            scanf("%s", first_name);
+            printf("Enter contact's last name: ");
+            scanf("%s", last_name);
+            printf("Enter contact's phone number: ");
+            scanf("%s", phone_number);
+            printf("Enter contact's email: ");
+            scanf("%s", email);
+            if (email[0] == '\n' || email == "null")
             {
                 strcpy(email, "null");
                 struct Contact *contact = Contact_obj(first_name, last_name, phone_number, "null");
                 strcpy(email, "");
                 addContact(contact);
-                choice = 0;
-                highlight = 1;
-                move(0, 0);
-                clear();
-                refresh();
-                print_menu(menu_win, highlight);
             }
             else
             {
                 struct Contact *contact = Contact_obj(first_name, last_name, phone_number, email);
                 strcpy(email, "");
                 addContact(contact);
-                choice = 0;
-                highlight = 1;
-                move(0, 0);
-                clear();
-                refresh();
-                print_menu(menu_win, highlight);
             }
-        }
-        if (choice == 2)
-        {
+            break;
+        case 2:
             char keyword[UINT16_MAX];
-            del_menu(menu_win);
-            if (getNodeCount(&top) == 0)
-            {
-                getmaxyx(stdscr, row, col);
-                char *mesg1 = "No contacts in memory!";
-                char *mesg2 = "Press ENTER to return";
-                mvprintw(row / 2 - 1, (col - strlen(mesg1)) / 2, "%s", mesg1);
-                refresh();
-                mvprintw(row - 1, (col - strlen(mesg2)) / 2, "%s", mesg2);
-                refresh();
-                getch();
-                choice = 0;
-                highlight = 1;
-                move(0, 0);
-                clear();
-                refresh();
-                print_menu(menu_win, highlight);
+            if (getNodeCount(&top) == 0){
+                printf("No contacts in memory!\n");
+                printf("Press any key to return!");
             }
-            if (getNodeCount(&top) > 0)
-            {
-                echo();
-                printw("Enter keyword: ");
-                refresh();
-                scanw("%s", keyword);
+            if (getNodeCount(&top) > 0){
+                printf("Enter keyword: ");
+                scanf("%s", keyword);
                 removeContact(keyword);
-                choice = 0;
-                highlight = 1;
-                move(0, 0);
-                clear();
-                refresh();
-                print_menu(menu_win, highlight);
             }
-        }
-        if (choice == 3)
-        {
+            while ((p = getchar()) != '\n' && p != EOF);
+            getchar();
+            break;
+        case 3:
             uint16_t pos = 0;
-            del_menu(menu_win);
-            refresh();
-            echo();
-            printw("Enter contact's first name: ");
-            refresh();
-            echo();
-            scanw("%s", first_name);
-            printw("Enter contact's last name: ");
-            refresh();
-            scanw("%s", last_name);
-            printw("Enter contact's phone number: ");
-            refresh();
-            scanw("%s", phone_number);
-            printw("Enter contact's email: ");
-            refresh();
-            scanw("%s", email);
-            printw("Enter position: ");
-            refresh();
-            scanw("%hu", &pos);
-            if (email[0] == '\n' || email == "null" || email[0] == '\0')
-            {
+            printf("Enter contact's first name: ");
+            scanf("%s", first_name);
+            printf("Enter contact's last name: ");
+            scanf("%s", last_name);
+            printf("Enter contact's phone number: ");
+            scanf("%s", phone_number);
+            printf("Enter contact's email: ");
+            scanf("%s", email);
+            printf("Enter position: ");
+            scanf("%hd", &pos);
+            if (email[0] == '\n' || email == "null")
                 strcpy(email, "null");
-            }
             struct Contact *contact = Contact_obj(first_name, last_name, phone_number, email);
             insertContact(contact, pos);
-            choice = 0;
-            highlight = 1;
-            move(0, 0);
-            clear();
-            refresh();
-            print_menu(menu_win, highlight);
-        }
-        if (choice == 4)
-        {
-            uint16_t pos = 0;
-            del_menu(menu_win);
-            refresh();
-            if (getNodeCount(&top) == 0)
-            {
-                getmaxyx(stdscr, row, col);
-                char *mesg1 = "No contacts in memory!";
-                char *mesg2 = "Press ENTER to return";
-                mvprintw(row / 2 - 1, (col - strlen(mesg1)) / 2, "%s", mesg1);
-                refresh();
-                mvprintw(row - 1, (col - strlen(mesg2)) / 2, "%s", mesg2);
-                refresh();
-                getch();
-                choice = 0;
-                highlight = 1;
-                move(0, 0);
-                clear();
-                refresh();
-                print_menu(menu_win, highlight);
+            break;
+        case 4:
+            if (getNodeCount(&top) == 0){
+                printf("No contacts in memory!\n");
+                printf("Press any key to return!");
             }
-            if (getNodeCount(&top) > 0)
-            {
+            if (getNodeCount(&top) > 0){
                 int16_t pos_negative;
-                printw("Enter position: ");
-                refresh();
-                scanw("%hu", &pos_negative);
                 // pos < 0 : Read user input into a signed integer, then check if it's positive and copy it it into an unsigned int variable
-                if (pos_negative >= 0)
-                {
+                printf("Enter position: ");
+                scanf("%hu", &pos_negative);
+                if (pos_negative >= 0){
                     pos = pos_negative;
                     removeContactPOS(pos);
-                    choice = 0;
-                    highlight = 1;
-                    move(0, 0);
-                    clear();
-                    refresh();
-                    print_menu(menu_win, highlight);
                 }
-                if (pos_negative < 0)
-                {
-                    del_menu(stdscr);
-                    getmaxyx(stdscr, row, col);
-                    char *mesg = "Unsigned (negative) index!";
-                    mvprintw(row / 2 - 1, (col - strlen(mesg)) / 2, "%s", mesg);
-                    refresh();
-                    getch();
-                    choice = 0;
-                    highlight = 1;
-                    move(0, 0);
-                    clear();
-                    refresh();
-                    print_menu(menu_win, highlight);
+                if (pos_negative < 0){
+                    printf("Unsigned (negative) index!");
+                    
                 }
             }
-        }
-        if (choice == 5)
-        {
-            char keyword[30];
-            del_menu(menu_win);
-            refresh();
-            if (getNodeCount(&top) == 0)
-            {
-                getmaxyx(stdscr, row, col);
-                char *mesg1 = "No contacts in memory!";
-                char *mesg2 = "Press ENTER to return";
-                mvprintw(row / 2 - 1, (col - strlen(mesg1)) / 2, "%s", mesg1);
-                refresh();
-                mvprintw(row - 1, (col - strlen(mesg2)) / 2, "%s", mesg2);
-                refresh();
-                getch();
-                choice = 0;
-                highlight = 1;
-                move(0, 0);
-                clear();
-                refresh();
-                print_menu(menu_win, highlight);
+            while ((p = getchar()) != '\n' && p != EOF);
+            getchar();
+            break;
+        case 5:
+            if (getNodeCount(&top) == 0){
+                printf("No contacts in memory!\n");
+                printf("Press any key to return!");
             }
-            if (getNodeCount(&top) > 0)
-            {
-                printw("Enter keyword: ");
-                echo();
-                refresh();
-                scanw("%s", keyword);
+            if (getNodeCount(&top) > 0){
+                char keyword[30];
+                printf("Enter keyword: ");
+                scanf("%s", keyword);
                 findContact(keyword);
-                refresh();
-                getch();
-                choice = 0;
-                highlight = 1;
-                move(0, 0);
-                clear();
-                refresh();
-                print_menu(menu_win, highlight);
             }
-        }
-        if (choice == 6)
-        {
-            del_menu(menu_win);
-            refresh();
+            while ((p = getchar()) != '\n' && p != EOF);
+            getchar();
+            break;
+        case 6:
             wipeContacts();
-            getmaxyx(stdscr, row, col);
-            char *mesg = "Contact(s) wiped!";
-            mvprintw(row / 2 - 1, (col - strlen(mesg)) / 2, "%s", mesg);
-            refresh();
-            getch();
-            choice = 0;
-            highlight = 1;
-            print_menu(menu_win, highlight);
-        }
-        if (choice == 7)
-        {
-            del_menu(menu_win);
-            refresh();
-            if (getNodeCount(&top) == 0)
-            {
-                getmaxyx(stdscr, row, col);
-                char *mesg1 = "No contacts in memory!";
-                char *mesg2 = "Press ENTER to return";
-                mvprintw(row / 2 - 1, (col - strlen(mesg1)) / 2, "%s", mesg1);
-                refresh();
-                mvprintw(row - 1, (col - strlen(mesg2)) / 2, "%s", mesg2);
-                refresh();
-                getch();
-                choice = 0;
-                highlight = 1;
-                move(0, 0);
-                clear();
-                refresh();
-                print_menu(menu_win, highlight);
+            printf("Contact(s) wiped!");
+            while ((p = getchar()) != '\n' && p != EOF);
+            getchar();
+            break;
+        case 7:
+            if (getNodeCount(&top) == 0){
+                printf("No contacts in memory!\n");
+                printf("Press any key to return!");
             }
-            if (getNodeCount(&top) > 0)
-            {
+            if (getNodeCount(&top) > 0){
                 saveContacts();
-                getmaxyx(stdscr, row, col);
-                char *mesg = "Contact(s) saved to file!";
-                mvprintw(row / 2 - 1, (col - strlen(mesg)) / 2, "%s", mesg);
-                refresh();
-                getch();
-                choice = 0;
-                highlight = 1;
-                print_menu(menu_win, highlight);
+                printf("Contact(s) saved to file!");
             }
-        }
-        if (choice == 8)
-        {
-            del_menu(menu_win);
-            refresh();
-            if (access(filepath, F_OK) == 0)
-            {
+            while ((p = getchar()) != '\n' && p != EOF);
+            getchar();
+            break;
+        case 8:
+            if (access(filepath, F_OK) == 0){
                 loadContacts();
-                getmaxyx(stdscr, row, col);
-                char *mesg = "Contact(s) loaded to memory!";
-                mvprintw(row / 2 - 1, (col - strlen(mesg)) / 2, "%s", mesg);
-                refresh();
-                getch();
-                choice = 0;
-                highlight = 1;
-                move(0, 0);
-                clear();
-                refresh();
-                print_menu(menu_win, highlight);
+                printf("Contact(s) loaded to memory!");
             }
-            if (access(filepath, F_OK) != 0)
-            {
-                getmaxyx(stdscr, row, col);
-                char *mesg1 = "Encountered problem with .csv file!";
-                char *mesg2 = "Press ENTER to return";
-                mvprintw(row / 2 - 1, (col - strlen(mesg1)) / 2, "%s", mesg1);
-                refresh();
-                mvprintw(row - 1, (col - strlen(mesg2)) / 2, "%s", mesg2);
-                refresh();
-                getch();
-                choice = 0;
-                highlight = 1;
-                move(0, 0);
-                clear();
-                refresh();
-                print_menu(menu_win, highlight);
+            if (access(filepath, F_OK) != 0){
+                printf("Encountered problem with .csv file!\n");
+                printf("Press any key to return");
             }
-        }
-        if (choice == 9)
-        {
-            del_menu(menu_win);
-            refresh();
-            if (getNodeCount(&top) == 0)
-            {
-                getmaxyx(stdscr, row, col);
-                char *mesg1 = "No contacts in memory!";
-                char *mesg2 = "Press ENTER to return";
-                mvprintw(row / 2 - 1, (col - strlen(mesg1)) / 2, "%s", mesg1);
-                refresh();
-                mvprintw(row - 1, (col - strlen(mesg2)) / 2, "%s", mesg2);
-                refresh();
-                getch();
-                choice = 0;
-                highlight = 1;
-                move(0, 0);
-                clear();
-                refresh();
-                print_menu(menu_win, highlight);
-            }
-            if (getNodeCount(&top) > 0)
-            {
+            while ((p = getchar()) != '\n' && p != EOF);
+            getchar();
+            break;  
+        case 9:
+            system("clear");
+            if (getNodeCount(&top) == 0){
+                printf("No contacts in memory!\n");
+                printf("Press any key to return!");
+            } 
+            if (getNodeCount(&top) > 0){
                 printList();
-                getch();
-                choice = 0;
-                highlight = 1;
-                move(0, 0);
-                clear();
-                refresh();
-                print_menu(menu_win, highlight);
             }
-        }
-        if (choice == 10)
-        {
-            delwin(menu_win);
-            endwin();
+            while ((p = getchar()) != '\n' && p != EOF);
+            getchar();
+            break;  
+        case 10:
             exit(0);
         }
     }
-    endwin();
     Unlock();
     return 0;
 }
