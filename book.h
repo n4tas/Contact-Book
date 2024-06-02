@@ -7,8 +7,6 @@
 #include <syslog.h>
 #include <errno.h>
 #include <strings.h>
-#include <ncurses.h>
-#include <menu.h>
 #define PATH "ContactBook.lock"
 #define WIDTH 30
 #define HEIGHT 12
@@ -114,11 +112,3 @@ Function to print a contact object on given data.
 data: contact's data.
 */
 void printObj(node_t* data);
-/*
-User interface function to print out menu options.
-*/
-void print_menu(WINDOW *menu_win, int highlight);
-/*
-User interface function which clears the menu.
-*/
-void del_menu(WINDOW *menu_win);
