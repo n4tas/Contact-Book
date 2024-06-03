@@ -13,19 +13,51 @@
 #define WIDTH 30
 #define HEIGHT 12
 /*
-Function to lock the app.
+Static node inherited from linked list library.
 */
-int Lock();
+static node_t *top = NULL;
 /*
-Function to unlock the app.
+Path to .csv contacts file. 
 */
-void Unlock();
+char filepath[256];
+/*
+Variable which stores the user's name.
+*/
+const char *user;
+/*
+Array of choices the user can choose from.
+*/
+const char *choices[] = {
+    "1. Add contact",
+    "2. Remove contact",
+    "3. Insert contact",
+    "4. Remove contact (POS)",
+    "5. Find contact",
+    "6. Wipe contact(s)",
+    "7. Save contact(s)",
+    "8. Load contact(s)",
+    "9. Print contact(s)",
+    "10. Exit"};
+/*
+Integer which represents the count of choices.
+*/
+int n_choices = sizeof(choices) / sizeof(char *);
+/*
+Function which creates a .lock file. A lock file 
+tells other applications not to use the file unless 
+it is free from the application that is using it.
+*/
+int lock();
+/*
+Function which unlocks the application, eventually deleting the .lock file.
+*/
+void unlock();
 /*
 Function to handle signals.
 @param
 sig: represents the signal that the function is handling. 
 */
-void handle_signal(int sig);
+void handle_Signal(int sig);
 /*
 Contact structure: each contact consists of four components (email can be null).
 @param
@@ -45,7 +77,7 @@ struct Contact
     char *email;
 };
 /*
-Function to create a Contact object.
+Function which creates a Contact object.
 @param
 first_name: first name of the contact.
 @param
@@ -57,21 +89,21 @@ email: email address of the contact.
 @return
 Pointer to the created Contact object.
 */
-struct Contact *Contact_obj(char *first_name, char *last_name, char *phone_number, char *email);
+struct Contact *Contact(char *first_name, char *last_name, char *phone_number, char *email);
 /*
-Function to add a new contact to the linked list.
+Function which adds a new contact to the linked list.
 @param
 contact: pointer to the Contact object.
 */
 void addContact(struct Contact *contact);
 /*
-Function to remove contact from the linked list based on a given keyword.
+Function which removes contact from the linked list based on a given keyword.
 @param
 keyword: keyword to search for in the contacts.
 */
 void removeContact(char *keyword);
 /*
-Function to insert a contact at a specific position in the linked list.
+Function which inserts a contact at a specific position in the linked list.
 @param
 contact: pointer to the Contact object.
 @param
@@ -79,46 +111,46 @@ pos: position at which the contact is to be inserted.
 */
 void insertContact(struct Contact *contact, uint16_t pos);
 /*
-Function to remove a contact from the linked list at a specific position.
+Function which removes a contact from the linked list at a specific position.
 @param
 pos: position of the contact to be removed. (One-based indexing. 0 is not a valid pos).
 */
 void removeContactPOS(uint16_t pos);
 /*
-Function to find a contact based on a keyword.
+Function which finds a contact based on a keyword.
 @param
 keyword: keyword to search for in the contacts (can be a partial).
 */
 void findContact(char *keyword);
 /*
-Function to wipe out all the contacts and data from the linked list.
+Function which wipes out all the contacts and data from the linked list.
 @param
 top: pointer to the head of the linked list.
 */
 void wipeContacts();
 /*
-Function to save the contacts to a file.
+Function which saves the contacts to a file.
 */
 void saveContacts();
 /*
-Function to load contacts from a file.
+Function which loads contacts from a file.
 */
 void loadContacts();
 /*
-Function to print out every contact's data.
+Function which prints out every contact's data.
 */
 void printList();
 /*
-Function to print a contact object on given data.
+Function which prints a contact object on given data.
 @param
 data: contact's data.
 */
 void printObj(node_t* data);
 /*
-User interface function to print out menu options.
+User interface function which prints out menu options.
 */
-void print_menu(WINDOW *menu_win, int highlight);
+void print_Menu(WINDOW *menu_win, int highlight);
 /*
 User interface function which clears the menu.
 */
-void del_menu(WINDOW *menu_win);
+void del_Menu(WINDOW *menu_win);
