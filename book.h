@@ -2,22 +2,45 @@
 #include <signal.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/file.h>
 #include <syslog.h>
 #include <errno.h>
 #include <strings.h>
 #define PATH "ContactBook.lock"
-#define WIDTH 30
-#define HEIGHT 12
 /*
-Function to lock the app.
+Array of choices the user can choose from.
 */
-int Lock();
+const char *choices[] = {
+    "1. Add contact",
+    "2. Remove contact",
+    "3. Insert contact",
+    "4. Remove contact (POS)",
+    "5. Find contact",
+    "6. Wipe contact(s)",
+    "7. Save contact(s)",
+    "8. Load contact(s)",
+    "9. Print contact(s)",
+    "10. Exit"};
 /*
-Function to unlock the app.
+Integer which represents the count of choices.
 */
-void Unlock();
+int n_choices = sizeof(choices) / sizeof(char *);
+/*
+Integer which represents the user's choice.
+*/
+int user_choice;
+/*
+Function which creates a .lock file. A lock file 
+tells other applications not to use the file unless 
+it is free from the application that is using it.
+*/
+int lock();
+/*
+Function which unlocks the application, eventually deleting the .lock file.
+*/
+void unlock();
 /*
 Function to handle signals.
 @param
@@ -112,3 +135,15 @@ Function to print a contact object on given data.
 data: contact's data.
 */
 void printObj(node_t* data);
+/*
+User interface function to print out menu options.
+*/
+/*
+
+*/
+void print_choices(){
+    for (int i = 0; i < n_choices; i++)
+        printf("%s\n", choices[i]); 
+    printf("Press index of the function: "); 
+    scanf("%d", &user_choice);
+}
