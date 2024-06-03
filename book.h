@@ -42,7 +42,7 @@ Function which unlocks the application, eventually deleting the .lock file.
 */
 void unlock();
 /*
-Function to handle signals.
+Function which prompts that there is a signal, wipes all contacts, unlocks the app and exits.
 @param
 sig: represents the signal that the function is handling. 
 */
@@ -66,7 +66,7 @@ struct Contact
     char *email;
 };
 /*
-Function to create a Contact object.
+Function which creates a Contact object.
 @param
 first_name: first name of the contact.
 @param
@@ -80,19 +80,19 @@ Pointer to the created Contact object.
 */
 struct Contact *Contact_obj(char *first_name, char *last_name, char *phone_number, char *email);
 /*
-Function to add a new contact to the linked list.
+Function which adds a new contact to the linked list.
 @param
 contact: pointer to the Contact object.
 */
 void addContact(struct Contact *contact);
 /*
-Function to remove contact from the linked list based on a given keyword.
+Function which removes contact from the linked list based on a given keyword.
 @param
 keyword: keyword to search for in the contacts.
 */
 void removeContact(char *keyword);
 /*
-Function to insert a contact at a specific position in the linked list.
+Function which inserts a contact at a specific position in the linked list.
 @param
 contact: pointer to the Contact object.
 @param
@@ -100,46 +100,43 @@ pos: position at which the contact is to be inserted.
 */
 void insertContact(struct Contact *contact, uint16_t pos);
 /*
-Function to remove a contact from the linked list at a specific position.
+Function which removes a contact from the linked list at a specific position.
 @param
 pos: position of the contact to be removed. (One-based indexing. 0 is not a valid pos).
 */
 void removeContactPOS(uint16_t pos);
 /*
-Function to find a contact based on a keyword.
+Function which finds a contact based on a keyword.
 @param
 keyword: keyword to search for in the contacts (can be a partial).
 */
 void findContact(char *keyword);
 /*
-Function to wipe out all the contacts and data from the linked list.
+Function which wipes out all the contacts and data from the linked list.
 @param
 top: pointer to the head of the linked list.
 */
 void wipeContacts();
 /*
-Function to save the contacts to a file.
+Function which saves the contacts to a file.
 */
 void saveContacts();
 /*
-Function to load contacts from a file.
+Function which loads contacts from a file.
 */
 void loadContacts();
 /*
-Function to print out every contact's data.
+Function which prints out every contact's data.
 */
 void printList();
 /*
-Function to print a contact object on given data.
+Function which prints a contact object on given data.
 @param
 data: contact's data.
 */
 void printObj(node_t* data);
 /*
-User interface function to print out menu options.
-*/
-/*
-
+Function which prints out choices.
 */
 void print_choices(){
     for (int i = 0; i < n_choices; i++)
