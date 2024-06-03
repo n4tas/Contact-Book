@@ -1,7 +1,4 @@
 #include "book.h"
-static node_t *top = NULL;
-char filepath[256];
-const char *user;
 int lock()
 {
     int fd = open(PATH, O_RDWR | O_CREAT, 0666);
@@ -44,7 +41,7 @@ void unlock()
 }
 void handle_signal(int sig)
 {
-    printf("Received termination signal. Exiting... \n");
+    printf("Received signal. Exiting... \n");
     wipeContacts(&top);
     Unlock();
     exit(sig);
