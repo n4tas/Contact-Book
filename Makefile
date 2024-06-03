@@ -5,7 +5,7 @@ BIN:=ContactBook
 INSTALL_PATH:=/usr/local/bin
 all: $(BIN)
 $(BIN): 
-	$(CC) $(SRC) $(LIBS)
+	$(CC) $(SRC) $(LIBS) -o $(BIN)
 .PHONY: install
 install:
 	install -D -m 644 book.h $(INSTALL_PATH)/$(BIN)
