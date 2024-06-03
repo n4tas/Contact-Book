@@ -2,24 +2,7 @@
 static node_t *top = NULL;
 char filepath[256];
 const char *user;
-const char *choices[] = {
-    "1. Add contact",
-    "2. Remove contact",
-    "3. Insert contact",
-    "4. Remove contact (POS)",
-    "5. Find contact",
-    "6. Wipe contact(s)",
-    "7. Save contact(s)",
-    "8. Load contact(s)",
-    "9. Print contact(s)",
-    "10. Exit"};
-int n_choices = sizeof(choices) / sizeof(char *);
-#define choices() for (int i = 0; i < n_choices; i++){ \
-        printf("%s\n", choices[i]); \
-    } \
-    printf("Press index of the function: "); \
-    scanf("%d", &c);
-int Lock()
+int lock()
 {
     int fd = open(PATH, O_RDWR | O_CREAT, 0666);
     if (fd == -1)
@@ -37,7 +20,7 @@ int Lock()
     syslog(LOG_INFO, "Instance locked.");
     return 0;
 }
-void Unlock()
+void unlock()
 {
     int fd = open(PATH, O_RDWR, 0666);
     if (fd == -1)
@@ -66,7 +49,7 @@ void handle_signal(int sig)
     Unlock();
     exit(sig);
 }
-struct Contact *Contact_obj(char *first_name, char *last_name, char *phone_number, char *email)
+struct Contact *Contact(char *first_name, char *last_name, char *phone_number, char *email)
 {
     struct Contact *c = (struct Contact *)malloc(sizeof(struct Contact));
     c->first_name = strdup(first_name);
@@ -234,15 +217,15 @@ void loadContacts()
         if (first_name && last_name && phone_number){
             first_name = strdup(first_name);
             last_name = strdup(last_name);
-            phone_number = strdup(phone_number); 
+            phone_number = strdup(phone_number);
             char *last_token = strtok(NULL, ",");
             if (last_token && last_token[0] != '\n' && last_token && strcmp(last_token, "null") != 0) {
                 last_token = strdup(last_token);
-                struct Contact *contact = Contact_obj(first_name, last_name, phone_number, last_token);
+                struct Contact *contact = Contact(first_name, last_name, phone_number, last_token);
                 addContact(contact);
             }
             else {
-                struct Contact *contact = Contact_obj(first_name, last_name, phone_number, "null");
+                struct Contact *contact = Contact(first_name, last_name, phone_number, "null");
                 addContact(contact);
             }
             strtok(NULL, ",");
@@ -296,12 +279,11 @@ void printObj(node_t *data)
 }
 int main()
 {
-    Lock();
+    lock();
     signal(SIGINT, handle_signal);
     signal(SIGCONT, handle_signal);
     signal(SIGSEGV, handle_signal);
     signal(SIGTERM, handle_signal);
-    int c;
     unsigned p;
     char first_name[30];
     char last_name[30];
@@ -311,11 +293,10 @@ int main()
     if (user == NULL)
         return 1;
     snprintf(filepath, sizeof(filepath), "/home/%s/Public/Books.csv", user);
-    system("clear");
     while (1){
     system("clear");
-    choices();
-    switch (c){
+    print_choices();
+    switch (user_choice){
         case 1:
             system("clear");
             printf("Enter contact's first name: ");
@@ -329,17 +310,18 @@ int main()
             if (email[0] == '\n' || email == "null")
             {
                 strcpy(email, "null");
-                struct Contact *contact = Contact_obj(first_name, last_name, phone_number, "null");
+                struct Contact *contact = Contact(first_name, last_name, phone_number, "null");
                 strcpy(email, "");
                 addContact(contact);
             }
             else
             {
-                struct Contact *contact = Contact_obj(first_name, last_name, phone_number, email);
+                struct Contact *contact = Contact(first_name, last_name, phone_number, email);
                 strcpy(email, "");
                 addContact(contact);
             }
             break;
+
         case 2:
             char keyword[UINT16_MAX];
             if (getNodeCount(&top) == 0){
@@ -354,6 +336,7 @@ int main()
             while ((p = getchar()) != '\n' && p != EOF);
             getchar();
             break;
+
         case 3:
             uint16_t pos = 0;
             printf("Enter contact's first name: ");
@@ -368,9 +351,10 @@ int main()
             scanf("%hd", &pos);
             if (email[0] == '\n' || email == "null")
                 strcpy(email, "null");
-            struct Contact *contact = Contact_obj(first_name, last_name, phone_number, email);
+            struct Contact *contact = Contact(first_name, last_name, phone_number, email);
             insertContact(contact, pos);
             break;
+
         case 4:
             if (getNodeCount(&top) == 0){
                 printf("No contacts in memory!\n");
@@ -393,6 +377,7 @@ int main()
             while ((p = getchar()) != '\n' && p != EOF);
             getchar();
             break;
+
         case 5:
             if (getNodeCount(&top) == 0){
                 printf("No contacts in memory!\n");
@@ -407,12 +392,14 @@ int main()
             while ((p = getchar()) != '\n' && p != EOF);
             getchar();
             break;
+
         case 6:
             wipeContacts();
             printf("Contact(s) wiped!");
             while ((p = getchar()) != '\n' && p != EOF);
             getchar();
             break;
+
         case 7:
             if (getNodeCount(&top) == 0){
                 printf("No contacts in memory!\n");
@@ -425,6 +412,7 @@ int main()
             while ((p = getchar()) != '\n' && p != EOF);
             getchar();
             break;
+
         case 8:
             if (access(filepath, F_OK) == 0){
                 loadContacts();
@@ -437,6 +425,7 @@ int main()
             while ((p = getchar()) != '\n' && p != EOF);
             getchar();
             break;  
+
         case 9:
             system("clear");
             if (getNodeCount(&top) == 0){
@@ -449,10 +438,11 @@ int main()
             while ((p = getchar()) != '\n' && p != EOF);
             getchar();
             break;  
+
         case 10:
             exit(0);
         }
     }
-    Unlock();
+    unlock();
     return 0;
 }
