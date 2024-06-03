@@ -10,6 +10,18 @@
 #include <strings.h>
 #define PATH "ContactBook.lock"
 /*
+Static node inherited from linked list library.
+*/
+static node_t *top = NULL;
+/*
+Path to .csv contacts file. 
+*/
+char filepath[256];
+/*
+Variable which stores the user's name.
+*/
+const char *user;
+/*
 Array of choices the user can choose from.
 */
 const char *choices[] = {
@@ -42,7 +54,7 @@ Function which unlocks the application, eventually deleting the .lock file.
 */
 void unlock();
 /*
-Function which prompts that there is a signal, wipes all contacts, unlocks the app and exits.
+Function to handle signals.
 @param
 sig: represents the signal that the function is handling. 
 */
@@ -66,7 +78,7 @@ struct Contact
     char *email;
 };
 /*
-Function which creates a Contact object.
+Function to create a Contact object.
 @param
 first_name: first name of the contact.
 @param
@@ -136,7 +148,10 @@ data: contact's data.
 */
 void printObj(node_t* data);
 /*
-Function which prints out choices.
+User interface function which prints out menu options.
+*/
+/*
+Function which prints out program's choices.
 */
 void print_choices(){
     for (int i = 0; i < n_choices; i++)
