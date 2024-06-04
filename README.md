@@ -31,10 +31,10 @@ This project is a command-line based contact management system written in C. It 
 - `Contact`: Represents a contact with fields for first name, last name, phone number, and email.
 - `node_t`: Node structure used in a linked list to manage contacts.
 ### Functions
--  `Lock()`: Locks the application to prevent multiple instances.
--  `Unlock()`: Unlocks the application.
+-  `lock()`: Locks the application to prevent multiple instances.
+-  `unlock()`: Unlocks the application.
 -  `handle_signal(int sig)`: Handles termination signals for graceful shutdown.
--  `Contact_obj(char *first_name, char *last_name, char *phone_number, char *email)`: Creates a new contact.
+-  `Contact(char *first_name, char *last_name, char *phone_number, char *email)`: Creates a new contact.
 -  `addContact(struct Contact *contact)`: Adds a contact to the end of the list.
 -  `removeContact(char *keyword)`: Removes a contact by keyword.
 -  `insertContact(struct Contact *contact, uint16_t pos)`: Inserts a contact at a specified position.
@@ -45,9 +45,3 @@ This project is a command-line based contact management system written in C. It 
 -  `loadContacts()`: Loads contacts from a file.
 -  `printList()`: Prints all contacts.
 -  `printObj(node_t *data)`: Prints a single contact.
--  `print_menu(WINDOW *menu_win, int highlight)`: Prints the menu with the current highlight.
--  `del_menu(WINDOW *menu_win)`: Clears the menu.
-### Menu Navigation
-- Use the arrow keys to navigate the menu.
-- Press Enter to select an option.
-- Follow prompts to add, remove, insert, or find contacts as needed.
