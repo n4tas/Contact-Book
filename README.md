@@ -13,7 +13,7 @@ This project is a command-line based contact management system written in C. It 
 -  Exit: Exit the program.
 ## Dependencies
 - <a href="https://github.com/N4tis/Linked-List">`Linked List Library`</a> - Provides essential data structures and functions for managing contacts, including operations to create, insert, and remove nodes in the list.
-- <a href="https://www.linux.co.cr/ldp/lfs/appendixa/ncurses.html">`Ncurses`</a> - Allows to create the text-based user interface, enabling functionalities such as rendering menus, handling user input, and managing the overall interaction with the application
+- <a href="https://www.linux.co.cr/ldp/lfs/appendixa/ncurses.html">`Ncurses`</a> - Allows to create the text-based user interface, enabling functionalities such as rendering menus, handling user input, and managing the overall interaction with the application.
 ## How Users Can Get Started with the Project
 - Clone the repository:
 `git clone https://github.com/N4tis/Contact-Book.git`
