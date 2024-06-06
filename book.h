@@ -149,8 +149,8 @@ void printObj(node_t* data);
 /*
 User interface function which prints out menu options.
 */
-void print_Menu(WINDOW *menu_win, int highlight);
+void printMenu(WINDOW *menu_win, int highlight);
 /*
 User interface function which clears the menu.
 */
-void del_Menu(WINDOW *menu_win);
+void delMenu(WINDOW *menu_win);
