@@ -45,3 +45,4 @@ This project is a command-line based contact management system written in C. It 
 -  `loadContacts()`: Loads contacts from a file.
 -  `printList()`: Prints all contacts.
 -  `printObj(node_t *data)`: Prints a single contact.
+-  `print_choices()`: Prints program's choices.
