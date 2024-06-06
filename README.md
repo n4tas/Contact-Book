@@ -46,8 +46,8 @@ This project is a command-line based contact management system written in C. It 
 -  `loadContacts()`: Loads contacts from a file.
 -  `printList()`: Prints all contacts.
 -  `printObj(node_t *data)`: Prints a single contact.
--  `print_Menu(WINDOW *menu_win, int highlight)`: Prints the menu with the current highlight.
--  `del_Menu(WINDOW *menu_win)`: Clears the menu.
+-  `printMenu(WINDOW *menu_win, int highlight)`: Prints the menu with the current highlight.
+-  `delMenu(WINDOW *menu_win)`: Clears the menu.
 ### Menu Navigation
 - Use the arrow keys to navigate the menu.
 - Press Enter to select an option.
