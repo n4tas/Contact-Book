@@ -1,5 +1,5 @@
 CC:=gcc
-LIBS:=-lllist -lncurses
+LIBS:=-lllist
 SRC:=book.c
 BIN:=ContactBook
 INSTALL_PATH:=/usr/local/bin
