@@ -274,6 +274,12 @@ void printObj(node_t *data)
                contact->phone_number);
     temp = temp->next;
 }
+void printChoices(){
+    for (int i = 0; i < n_choices; i++)
+        printf("%s\n", choices[i]); 
+    printf("Press index of the function: "); 
+    scanf("%d", &user_choice);
+}
 int main()
 {
     lock();
@@ -292,7 +298,7 @@ int main()
     snprintf(filepath, sizeof(filepath), "/home/%s/Public/Books.csv", user);
     while (1){
     system("clear");
-    print_choices();
+    printChoices();
     switch (user_choice){
         case 1:
             system("clear");
@@ -366,10 +372,8 @@ int main()
                     pos = pos_negative;
                     removeContactPOS(pos);
                 }
-                if (pos_negative < 0){
+                if (pos_negative < 0)
                     printf("Unsigned (negative) index!");
-                    
-                }
             }
             while ((p = getchar()) != '\n' && p != EOF);
             getchar();
