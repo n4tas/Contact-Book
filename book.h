@@ -153,9 +153,4 @@ User interface function which prints out menu options.
 /*
 Function which prints out program's choices.
 */
-void print_choices(){
-    for (int i = 0; i < n_choices; i++)
-        printf("%s\n", choices[i]); 
-    printf("Press index of the function: "); 
-    scanf("%d", &user_choice);
-}
+void printChoices();
