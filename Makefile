@@ -1,15 +1,27 @@
-CC:=gcc
-LIBS:=-lllist
-SRC:=book.c
-BIN:=ContactBook
-INSTALL_PATH:=/usr/local/bin
+SRC:=$(wildcard *.c)
+BIN:=AddressBook
+OBJ:=$(SRC:.c=.o)
+CFLAGS:=-Wall -Wextra
+CPPFLAGS:=-I../lib
+LDFLAGS:=-L../lib
+LIBS:=-llinked_list
+BIN_DIR:=/usr/local/bin
+
+.PHONY: all clean install uninstall
+
 all: $(BIN)
-$(BIN): 
-	$(CC) $(SRC) $(LIBS) -o $(BIN)
-.PHONY: install
-install:
-	install -D -m 644 book.h $(INSTALL_PATH)/$(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) -o $(BIN) $^ $(LDFLAGS) $(LIBS)
+
+%.o: %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $^
+
+install: $(BIN)
+	install -D -m 644 $(BIN) $(BIN_DIR)/$(AddressBook)
+
 uninstall:
-	rm -f $(INSTALL_PATH)/$(BIN)
+	$(RM) $(BIN) $(BIN_DIR)/$(BIN)
+
 clean:
-	rm -f $(OBJ) $(BIN)
+	$(RM) $(OBJ) $(BIN)
